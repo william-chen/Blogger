@@ -32,4 +32,4 @@ Time spent: `<10>`
 
 ### Walkthrough
 
-![Video Walkthrough](...)
+![Video Walkthrough](blogger_demo.gif)
