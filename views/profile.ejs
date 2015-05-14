@@ -36,14 +36,28 @@
                     <strong>Blog Description</strong>: <%= user.blogDescription %><br>
                     <!--<strong>Blog Creation Date</strong>: <%= user.blogCreateDate %><br>
                     <strong>Blog Update Date</strong>: <%= user.blogUpdateDate %><br>-->
-                    <% if (post) { %>
-                        <a href="/post/<%= post.id %>" class="btn btn-default btn-sm">Edit Post</a>
-                        <a href="/profile" class="btn btn-default btn-sm">Delete Post</a>
-                    <% } %>
                 </p>
                 
         </div>
 
+        <!-- Blog POST INFORMATION -->
+        <div class="well">
+            <h3><span class="fa fa-laptop"></span> Blog Post(s)</h3>
+                <% if (typeof posts !== 'undefined' && posts.length > 0) { %>
+                    <p>
+                    <% for (var index=0; index< posts.length; index++) { %>
+                            <strong>title</strong>: <%= posts[index].title %><br>
+                            <strong>create date</strong>: <%= posts[index].createDate %><br>
+                            <strong>update date</strong>: <%= posts[index].updateDate %><br>
+                            <strong>comment count</strong>: <%= posts[index].commentsCount %><br>
+                            <a href="/post/<%= posts[index].id %>" class="btn btn-default btn-sm">Edit Post</a>
+                            <a type="submit" class="btn btn-default btn-sm">Delete Post</a><br>
+                    <% } %>
+                    <p>
+                <% } %>
+                
+        </div>
 </div>
+
 </body>
 </html>

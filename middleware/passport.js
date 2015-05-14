@@ -2,39 +2,41 @@ let LocalStrategy = require('passport-local').Strategy
 let nodeifyit = require('nodeifyit')
 let moment = require('moment')
 let User = require('../user')
+let Post = require('../models/post')
 let util = require('util')
 
 module.exports = (app) => {
   let passport = app.passport
+  passport.serializeUser(nodeifyit(async (user) => user._id))
+  passport.deserializeUser(nodeifyit(async (id) => {
+    return await User.promise.findById(id)
+  }))
 
   passport.use(new LocalStrategy({
     // Use "email" field instead of "username"
     usernameField: 'username',
-    failureFlash: true
-  }, nodeifyit(async (username, password) => {
+    failureFlash: true,
+    passReqToCallback: true
+  }, nodeifyit(async (req, username, password) => {
     let user
+    let posts
     if (username.indexOf('@')) {
       let email = username.toLowerCase()
-      user = await User.promise.findOne({email})
-    } else {
-      let regexp =  new RegExp(username, 'i')
-      user = await User.promise.findOne({username: {$regex: regexp}})
-    }
-
-    if (!user || username !== user.username) {
+      user = await User.promise.findOne({email: email})
+      //posts = await Post.promise.find({author: email})
+    } 
+    
+    if (!user) return [false, {message: 'user not found'}]
+    if (username !== user.username && username !== user.email) {
       return [false, {message: 'Invalid username'}]
     }
 
     if (!await user.validatePassword(password)) {
       return [false, {message: 'Invalid password'}]
     }
+    //console.log(posts)
     return user
   }, {spread: true})))
-
-  passport.serializeUser(nodeifyit(async (user) => user._id))
-  passport.deserializeUser(nodeifyit(async (id) => {
-    return await User.promise.findById(id)
-  }))
 
   passport.use('local-signup', new LocalStrategy({
     // Use "email" field instead of "username"
@@ -75,28 +77,5 @@ module.exports = (app) => {
         return [false, {message: e.message}]
       }
       
-  }, {spread: true})))
-
-  passport.use('local', new LocalStrategy({
-    usernameField: 'username',
-    failureFlash: true
-  }, nodeifyit(async (username, password)=> {
-    let user
-    if (username.indexOf('@')) {
-      let email = username.toLowerCase()
-      user = await User.promise.findOne({email})
-    } else {
-      let regexp =  new RegExp(username, 'i')
-      user = await User.promise.findOne({username: {$regex: regexp}})
-    }
-
-    if (!user || username !== user.username) {
-      return [false, {message: 'Invalid username'}]
-    }
-
-    if (!await user.validatePassword(password)) {
-      return [false, {message: 'Invalid password'}]
-    }
-    return user
   }, {spread: true})))
 }

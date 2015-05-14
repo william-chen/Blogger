@@ -26,7 +26,7 @@ app.use(cookieParser('ilovethenodejs'))
 // Get POST/PUT body information (e.g., from html forms)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(multer());
+app.use(flash())
 
 // Use ejs for templating
 app.set('view engine', 'ejs')

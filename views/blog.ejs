@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+    <title>Blog</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body         { padding-top:80px; word-wrap:break-word; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-user"></span> User Blog Page</h1>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+    <% } %>
+
+    <div class="row">
+
+        <!-- Blog POST INFORMATION -->
+        <div class="well">
+            <h3><span class="fa fa-laptop"></span> Blog Post(s)</h3>
+                <% if (typeof posts !== 'undefined' && posts.length > 0) { %>
+                    <p>
+                    <% for (var index=0; index< posts.length; index++) { %>
+                            <strong>title</strong>: <%= posts[index].title %><br>
+                            <strong>content</strong>: <%= posts[index].content %><br>
+                            <% if (typeof images !== 'undefined' && images[index]) { %> 
+                                <img src="<%=images[index]%>" style="height: 200px; width: 200px"</div><br>
+                            <% } %> 
+                            <% if (Date.parse(posts[index].createDate) < Date.parse(posts[index].updateDate)){ %>
+                                <strong>Last Date</strong>: <%= posts[index].updateDate %><br>
+                            <% } else { %>
+                                <strong>Last Date</strong>: <%= posts[index].createDate %><br>
+                            <% } %>
+                            <strong>User comments</strong>:<br>
+                            <% if (typeof comments !== 'undefined' && comments.length > 0) { %>
+                                <% for (var i=0; i< comments.length; i++) { %>
+                                    <strong>content</strong>: <%= comments[i].userComment %><br>
+                                    <strong>commenter</strong>: <%= comments[i].commenter %><br>
+                                <% } %>
+                            <% } %> 
+                            <% if (req.isAuthenticated()) { %>
+                            <form action="/post/<%=posts[index].id %>/comments/<%=originalAuthor %>" method="post">
+                                <div class="form-group" required>
+                                    <label>Comment</label>
+                                    <textarea name="comment" class="form-control" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-default btn-sm">Post Comment</button><br>
+                            </form>
+                            <% } %>
+                    <% } %>
+                    <p>
+                <% } %>
+                
+        </div>
+</div>
+
+</body>
+</html>

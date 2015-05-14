@@ -1,6 +1,7 @@
 let mongoose = require('mongoose')
 let bcrypt = require('bcrypt')
 let nodeify = require('bluebird-nodeify')
+let Post = require('./models/post')
 
 require('songbird')
 
@@ -21,6 +22,7 @@ let UserSchema = mongoose.Schema({
   blogDescription: String,
   blogCreateDate: String,
   blogUpdateDate: String
+  //posts: [Post.schema]
 })
 
 UserSchema.methods.generateHash = async function(password) {
